@@ -14,13 +14,20 @@ ID first (see [Discord Bot Setup](#discord-bot-setup)).
 
 ### A. Railway (one-click)
 
-> New to Railway? [Create an account](https://railway.com) first. New accounts
-> get free starter credit, and this bot is tiny enough to run on very little.
+This bot is small, but it runs **always-on**, so it needs Railway's **Hobby
+plan ($5/month**, which includes $5 of usage — plenty for this bot). The good
+news: signing up through a referral link gives your new account **$20 in
+credit**, which covers **~4 months** of Hobby hosting.
+
+1. **Create your Railway account** through this referral link to get the **$20
+   credit**: **[railway.com (referral)](https://railway.com?referralCode=79B_T4)**.
+2. On the [Hobby plan](https://railway.com/pricing) ($5/mo), the $20 credit is
+   applied to your bill automatically — so the first few months are effectively
+   free. A card is required on file for any usage beyond the credit.
+3. Click **Deploy on Railway** below, fill in `DISCORD_TOKEN` /
+   `FEEDING_CHANNEL_ID` (and optionally `BABY_NAME` / `BABY_DOB`), and deploy.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/hL6R1x?utm_medium=integration&utm_source=template&utm_campaign=baby-chart)
-
-Click the button, fill in `DISCORD_TOKEN` / `FEEDING_CHANNEL_ID` (and optionally
-`BABY_NAME` / `BABY_DOB`), and deploy.
 
 <details>
 <summary>Prefer to deploy from your own fork instead of the button?</summary>
