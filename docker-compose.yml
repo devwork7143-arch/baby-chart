@@ -1,0 +1,14 @@
+services:
+  baby-chart:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # TZ must be a host/env var, not in .env (.env loads too late to change it).
+      - TZ=America/New_York   # set your timezone
+      - HOST=0.0.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      # feedings.json persists here. The image sets DATA_DIR=/data.
+      - ./data:/data

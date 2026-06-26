@@ -1,0 +1,6 @@
+discord.py>=2.7,<3
+fastapi>=0.136,<1
+uvicorn>=0.48,<1
+matplotlib>=3.10,<4
+numpy>=2.4,<3
+python-dotenv>=1.2,<2

@@ -1,0 +1,12 @@
+.env
+.env.*
+feedings.json
+feedings.json.*
+*.bak
+*.log
+.venv/
+__pycache__/
+*.pyc
+.git/
+chart.html
+data/
