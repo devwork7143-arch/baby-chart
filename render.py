@@ -740,8 +740,12 @@ def build_png(data, window_days=14, sleep=None, diaper=None, bottle=None):
         b_n = b_oz = 0
     lines = [
         f"Today: {len(today_sessions)} sessions · {today_min} min · sleep {round(today_sleep_min / 60.0, 1)} h",
-        f"Diapers today: {dw} wet, {ddi} dirty, {db} both",
-        f"Bottles today: {b_n} ({b_oz} oz)",
+    ]
+    if dw or ddi or db:
+        lines.append(f"Diapers today: {dw} wet, {ddi} dirty, {db} both")
+    if b_n:
+        lines.append(f"Bottles today: {b_n} ({b_oz} oz)")
+    lines += [
         f"All time: {s['total_sessions']} sessions · {s['total_hours']} h · {s['days_tracked']} days tracked",
         f"L : R = {s['lr_ratio']}    Longest session: {s['longest_session']} min    Longest gap (excl. overnight): {last_gap} h",
     ]

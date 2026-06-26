@@ -141,7 +141,7 @@ HELP_TEXT = (
     "**Split across messages** — works for ~2 h:\n"
     "```\n"
     "L 10:00                # open session\n"
-    "- 10:15                # closes the most recent open same-author session\n"
+    "- 10:15                # closes the most recent open session (any author)\n"
     "```\n"
     "\n"
     "**Other commands** (fuzzy-matched, so `chrt`/`stat`/`hlp` all work):\n"
@@ -539,7 +539,7 @@ async def _check_wake_reminder():
     if ch:
         h, m = divmod(int(elapsed_min), 60)
         elapsed_str = f"{h}h {m}min" if h else f"{m}min"
-        await ch.send(f"⏰ {BABY_NAME} has been awake for {elapsed_str} — send `SS` to start a sleep log.")
+        await ch.send(f"⏰ {BABY_NAME} has been awake for {elapsed_str} — may be time for a nap!")
         log.info("Wake reminder sent (elapsed %.0f min)", elapsed_min)
 
 
