@@ -166,6 +166,45 @@ HELP_TEXT = (
 )
 
 
+def chunk_message(text, limit=2000):
+    """Split text into ≤limit-char pieces for Discord's 2000-char message cap.
+
+    Splits on blank lines first (keeps code fences / sections intact), then on
+    single newlines if a section is still too long. A single line longer than
+    limit is hard-sliced as a last resort.
+    """
+    chunks = []
+    buf = ""
+
+    def flush():
+        nonlocal buf
+        if buf:
+            chunks.append(buf)
+            buf = ""
+
+    for para in text.split("\n\n"):
+        piece = para + "\n\n"
+        if len(buf) + len(piece) <= limit:
+            buf += piece
+            continue
+        flush()
+        if len(piece) <= limit:
+            buf = piece
+            continue
+        # section itself too long: fall back to line-by-line packing
+        for line in para.split("\n"):
+            ln = line + "\n"
+            if len(buf) + len(ln) > limit:
+                flush()
+                while len(ln) > limit:           # single oversized line
+                    chunks.append(ln[:limit])
+                    ln = ln[limit:]
+            buf += ln
+        flush()
+    flush()
+    return [c.rstrip("\n") for c in chunks] or [""]
+
+
 def match_trigger(body):
     """Return the canonical trigger word if body is a typo-tolerant match.
 
@@ -644,7 +683,8 @@ async def on_message(msg: discord.Message):
         return
 
     if trigger in TRIGGERS_HELP or body.strip() == "?":
-        await msg.channel.send(HELP_TEXT)
+        for chunk in chunk_message(HELP_TEXT):
+            await msg.channel.send(chunk)
         return
 
     wake_match = WAKE_RE.match(body.strip())
