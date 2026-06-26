@@ -236,7 +236,11 @@ def load_feedings():
 
 def save_feedings(data):
     data["generated_at"] = datetime.now().isoformat(timespec="microseconds")
-    FEEDINGS_PATH.write_text(json.dumps(data, indent=2))
+    # Atomic write: a crash/kill mid-write can't truncate the real file —
+    # the rename is atomic on POSIX, so feedings.json is always whole.
+    tmp = FEEDINGS_PATH.with_suffix(FEEDINGS_PATH.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=2))
+    os.replace(tmp, FEEDINGS_PATH)
 
 
 # ─── Small bot-layer helpers ───────────────────────────────────────────────────
@@ -968,6 +972,35 @@ async def on_message(msg: discord.Message):
         reply += warning
     await msg.reply(reply, mention_author=False, silent=True)
     asyncio.create_task(update_channel_topic(msg.channel, topic_snap))
+
+
+@client.event
+async def on_error(event_method, *args, **kwargs):
+    """Catch-all so an unhandled exception in any event handler fails gracefully.
+
+    Overrides discord.py's default (which only logs "Ignoring exception …").
+    We still log the full traceback, and for message handlers we react ⚠️ and
+    post one generic line so the user isn't left staring at silence. Everything
+    here is itself wrapped so the error handler can never raise.
+    """
+    log.exception("Unhandled exception in %s", event_method)
+    if event_method != "on_message":
+        return
+    msg = args[0] if args else None
+    if msg is None or getattr(getattr(msg, "channel", None), "id", None) != CHANNEL_ID:
+        return
+    try:
+        await msg.add_reaction("⚠️")
+    except Exception:
+        pass
+    try:
+        await msg.reply(
+            "⚠️ something went wrong handling that — it's been logged. "
+            "Your data is safe; try again or rephrase.",
+            mention_author=False, silent=True,
+        )
+    except Exception:
+        log.exception("on_error: failed to post the fallback reply")
 
 
 # ─── Local chart server ────────────────────────────────────────────────────────
