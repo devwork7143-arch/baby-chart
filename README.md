@@ -9,8 +9,10 @@ them. One Python process runs the Discord bot and a local web dashboard.
 
 ## Deploy
 
-Three ways to run it — pick one. All three need a Discord bot token and a channel
-ID first (see [Discord Bot Setup](#discord-bot-setup)).
+Four ways to run it — pick one. All of them need a Discord bot token and a channel
+ID first (see [Discord Bot Setup](#discord-bot-setup)). **Railway** is the easiest,
+most hands-off deploy (~$5/month); **Sparked Host** is cheaper (~$1–2/month) and fully
+point-and-click, with a bit more setup.
 
 ### A. Railway (one-click)
 
@@ -29,6 +31,13 @@ credit**, which covers **~4 months** of Hobby hosting.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/hL6R1x?utm_medium=integration&utm_source=template&utm_campaign=baby-chart)
 
+> Railway doesn't require a GitHub account — you can sign up with email. Its
+> GitHub check only governs the **free trial** (a brand-new account may land on a
+> limited trial with restricted networking). Adding a payment method / starting on
+> the **Hobby plan** skips that entirely, so deploy on Hobby rather than evaluating
+> on the free trial. If you'd rather spend less than $5/month and don't mind a more
+> involved setup, use **Sparked Host** below.
+
 <details>
 <summary>Prefer to deploy from your own fork instead of the button?</summary>
 
@@ -44,7 +53,45 @@ credit**, which covers **~4 months** of Hobby hosting.
 
 </details>
 
-### B. Docker (self-hosted)
+### B. Sparked Host (panel)
+
+A cheaper, fully point-and-click alternative — and a good fallback if Railway gives
+you trouble. It's a web control panel (no terminal required), and the flat price is
+lower: **~$1–2/month**. Because this bot imports `matplotlib`
+and `numpy` (memory-heavy), order the **Advanced** plan (**$2/mo, 1 GB RAM**) for
+headroom — the **Basic** plan ($1/mo, 512 MB) works but is tight.
+
+1. Sign up via **[Sparked Host (referral)](https://billing.sparkedhost.com/aff.php?aff=3312)**
+   and order a **Discord Bot Hosting** plan (**Advanced — 1 GB** recommended).
+2. In the panel, open the **File Manager** and upload the bot's files —
+   `bot.py`, `parser.py`, `render.py`, `nap.py`, and `requirements.txt` (a
+   zip-upload or the panel's "pull from Git" option both work). **Don't** upload
+   `.env` — secrets go in the panel's variables instead (step 5).
+3. **Startup → Python Packages**: paste the dependencies, space-separated —
+   `discord.py fastapi uvicorn matplotlib numpy python-dotenv`. (Panels install
+   from this field; some also read `requirements.txt` automatically.)
+4. **Startup**: set the bot file / startup command to run **`bot.py`** (e.g.
+   `python3 bot.py`, per Sparked Host's Python-bot guide).
+5. **Variables**: add `DISCORD_TOKEN` and `FEEDING_CHANNEL_ID` (and optionally
+   `BABY_NAME` / `BABY_DOB`), plus **`TZ=America/New_York`** for your timezone
+   (this must be a host/panel variable — see [Environment Variables](#environment-variables)).
+   Leave **`HOST=127.0.0.1`** so the unauthenticated dashboard stays private — the
+   Discord `chart`/PNG commands give you the full view from your phone anyway. Only
+   set `HOST=0.0.0.0` + `PORT=<panel-allocated port>` if you deliberately want the
+   public web dashboard.
+6. **Persistence**: `feedings.json` is written in the panel's working directory,
+   which survives restarts — there's no volume to configure (just don't wipe the
+   File Manager). Back it up by downloading it from the File Manager — see
+   [Data & Backups](#data--backups).
+7. Click **Start** in the console, then [invite the bot](#discord-bot-setup) to your
+   server and start logging.
+
+**Heads-up:** the "chart at home" web dashboard is awkward on a shared panel host
+(one allocated port, no auth), so the Discord chart commands are the intended
+experience there. And if the bot fails to start, double-check the **Python Packages**
+field — panels don't always auto-install from `requirements.txt`.
+
+### C. Docker (self-hosted)
 
 Build the image, then run it with **docker compose** (recommended) or a raw
 `docker run`. Both persist state to `./data/feedings.json` on the host.
@@ -76,7 +123,7 @@ The dashboard comes up at `http://localhost:8000/`. Set your timezone via the `T
 env var here (**not** in `.env` — see [Environment Variables](#environment-variables)).
 The `-v` mount keeps `feedings.json` in `./data/` on the host.
 
-### C. Local (no Docker)
+### D. Local (no Docker)
 
 ```bash
 python3 -m venv .venv
@@ -212,8 +259,9 @@ cp feedings.json feedings.json.$(date +%F).bak
 ```
 
 Where the file lives depends on how you run it: next to the code locally, in
-`./data/` with the Docker runbook (the host side of the `/data` bind-mount), and
-on the `/data` volume on Railway (download it via the Railway CLI or a volume
+`./data/` with the Docker runbook (the host side of the `/data` bind-mount), in the
+bot's working directory on Sparked Host (download it from the panel's File Manager),
+and on the `/data` volume on Railway (download it via the Railway CLI or a volume
 browser) — keep an off-host copy either way.
 
 The web dashboard binds to `HOST` only and there is no auth — keep it on
