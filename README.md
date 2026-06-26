@@ -11,7 +11,7 @@ them. One Python process runs the Discord bot and a local web dashboard.
 
 Four ways to run it — pick one. All of them need a Discord bot token and a channel
 ID first (see [Discord Bot Setup](#discord-bot-setup)). **Railway** is the easiest,
-most hands-off deploy (~$5/month); **Sparked Host** is cheaper (~$1–2/month) and fully
+most hands-off deploy (about $5/month); **Sparked Host** is cheaper (about $1–2/month) and fully
 point-and-click, with a bit more setup.
 
 ### A. Railway (one-click)
@@ -19,7 +19,7 @@ point-and-click, with a bit more setup.
 This bot is small, but it runs **always-on**, so it needs Railway's **Hobby
 plan ($5/month**, which includes $5 of usage — plenty for this bot). The good
 news: signing up through a referral link gives your new account **$20 in
-credit**, which covers **~4 months** of Hobby hosting.
+credit**, which covers **about 4 months** of Hobby hosting.
 
 1. **Create your Railway account** through this referral link to get the **$20
    credit**: **[railway.com (referral)](https://railway.com?referralCode=79B_T4)**.
@@ -57,7 +57,7 @@ credit**, which covers **~4 months** of Hobby hosting.
 
 A cheaper, fully point-and-click alternative — and a good fallback if Railway gives
 you trouble. It's a web control panel (no terminal required), and the flat price is
-lower: **~$1–2/month**. Because this bot imports `matplotlib`
+lower: **about $1–2/month**. Because this bot imports `matplotlib`
 and `numpy` (memory-heavy), order the **Advanced** plan (**$2/mo, 1 GB RAM**) for
 headroom — the **Basic** plan ($1/mo, 512 MB) works but is tight.
 
