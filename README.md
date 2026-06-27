@@ -249,6 +249,16 @@ Reactions confirm each entry: 🍼 feed · 😴 sleep · 🚼 diaper · 🤔 cou
 
 ---
 
+## Log from your phone's home screen
+
+Put **L / R / SS / SF / undo** buttons on your Android or iPhone home screen — one
+tap logs a feed or sleep, no Discord needed. It uses a Discord webhook plus a
+phone shortcuts app (HTTP Request Shortcuts on Android, the built-in Shortcuts
+app on iOS), and needs **no changes to the bot**. See
+[docs/phone-widget.md](docs/phone-widget.md).
+
+---
+
 ## Data & Backups
 
 `feedings.json` is the **only** durable state — back it up and you've backed up
