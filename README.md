@@ -3,7 +3,7 @@
 A Discord bot that turns a baby's daily log — breast & bottle feeds, sleep and
 naps, and diapers — into live charts. Type plain-text entries in a channel
 (`L 10:00 - 10:10`, `SS 22:30`, `chart`); the bot parses, stores, and renders
-them. One Python process runs the Discord bot and a local web dashboard.
+them ([full grammar →](#channel-grammar)). One Python process runs the Discord bot and a local web dashboard.
 
 ---
 
